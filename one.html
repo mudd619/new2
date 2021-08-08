@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>one</title>
+        <style>
+            #border{
+                border: 1px solid black;
+                display: flex;
+            }
+            #one{
+                margin-left: 7%;
+            }
+            #two{
+                margin-left: 60%;
+            }
+            #three{
+                margin-left: 5%;
+            }
+            #inp{
+                margin-left: 37%;
+                width: 20%;
+                margin-top: 2%;
+            }
+            #app{
+                margin-left: 36.5%;
+                width: 20.5%;
+                height: 20vw;
+                border: 1px solid black;
+                border-top: none;
+            }
+            #me{
+                display: grid;
+                grid-template-columns: repeat(4,20%);
+                grid-gap: 4%;
+                margin-left: 5%;
+                margin-top: 3%;
+            }
+            .img{
+                width: 100%;   
+            }
+        </style>
+    </head>
+    <body>
+        <div id="the"></div>
+        <input oninput="divv()" id="inp" type="text" placeholder="Recipe Name">
+        <input onclick="main()" type="submit">
+        <div style="display: none;overflow: scroll;position: absolute;background-color: white;" id="app"></div>
+        <div id="me"></div>
+    </body>
+</html>
+
+<script>
+
+    let div = document.getElementById("me");
+    let write = document.getElementById("app");
+    let tim;
+    function divv(){
+        if(tim){
+            return
+        }
+
+        tim = setTimeout(()=>{
+            divloop();
+            tim= undefined;
+        },1000)
+        
+    }
+
+    async function divloop(){
+        write.innerHTML = null
+        let res1 = await input();
+        res1.forEach((ele,i)=>{
+            let p = document.createElement("p");
+            p.innerHTML = ele.strMeal;
+            p.setAttribute("id",`${i}`)
+            p.setAttribute("style","cursor: pointer;")
+            write.append(p);
+            let get = document.getElementById(`${i}`)
+            get.addEventListener("click",()=>{
+                document.getElementById("inp").value = get.innerHTML;
+                write.style.display = "none"
+            })
+        })
+    }
+    
+
+    function main(){
+       loop();   
+       write.style.display = "none";
+    }
+    
+    async function input(){
+        let inp = document.getElementById("inp").value;
+
+        if(inp == ""){
+            write.style.display ="none"
+        }
+        else{
+            write.style.display ="block"
+        }
+
+        let res= await fetch(`https://themealdb.com/api/json/v1/1/search.php?s=${inp}`);
+        
+        let data = await res.json();
+
+        if(data.meals == null){
+            write.style.display = "none";
+        }
+        return (data.meals)
+    }
+    
+    
+
+
+    async function loop(){
+        div.innerHTML = null
+
+        let res = await input();
+        
+        res.forEach(ele => {
+            let img = document.createElement("img");
+            let p = document.createElement("p");
+            let temp = document.createElement("a");
+            img.src = ele.strMealThumb;
+            img.setAttribute("class","img")
+            p.innerHTML = ele.strMeal;
+            
+            temp.append(img,p)
+            if((ele.strSource == null) || (ele.strSource == "")){
+                temp.addEventListener("click",()=>{
+                   alert("info not found")
+                })
+            }
+            else{
+                temp.href = ele.strSource;
+               
+            }
+            div.append(temp);
+            
+        });
+    }
+    main();
+   
+</script>
+
+
+<script type="module">
+    let one = document.getElementById("the")
+    import any from "./one.js"
+    one.innerHTML =  any();
+</script>

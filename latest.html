@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>recipe</title>
+        <style>
+            #border{
+                border: 1px solid black;
+                display: flex;
+            }
+            #one{
+                margin-left: 7%;
+            }
+            #two{
+                margin-left: 60%;
+            }
+            #three{
+                margin-left: 5%;
+            }
+            #appen{
+                display: grid;
+                grid-template-columns: repeat(4,20%);
+                grid-gap: 4%;
+                margin-left: 5%;
+                margin-top: 3%;
+            }
+            .img{
+                width: 100%;   
+            }
+        </style>
+    </head>
+    <body>
+        <div id="the"></div>
+        <h1 style="text-align: center;">Latest Recipies</h1>
+        <div id="appen"></div>
+    </body>
+</html>
+
+<script type="module">
+    import call from "./one.js"
+    let the = document.getElementById("the");
+    the.innerHTML = call();
+
+    import {inp,loop} from "./operate.js";
+
+    let div = document.getElementById("appen");
+    loop(inp("https://www.themealdb.com/api/json/v1/1/filter.php?i=chicken_breast"),div);
+    
+
+    
+</script>
